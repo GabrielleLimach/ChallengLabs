@@ -1,0 +1,15 @@
+server:
+  port: 9999
+spring:
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: gmcore123
+    driver-class-name: org.postgresql.Driver
+logging:
+  level: debug
