@@ -12,4 +12,5 @@ spring:
     password: gmcore123
     driver-class-name: org.postgresql.Driver
 logging:
-  level: debug
+  level:
+    com.challenge.labs: debug
