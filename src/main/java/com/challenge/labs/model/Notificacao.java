@@ -1,13 +1,19 @@
 package com.challenge.labs.model;
 
 import com.challenge.labs.model.enums.StatusEnvio;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(schema = "agendamento", name = "ag03_notificacao")
 public class Notificacao {
 
