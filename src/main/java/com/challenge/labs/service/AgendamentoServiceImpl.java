@@ -1,5 +1,6 @@
 package com.challenge.labs.service;
 
+import com.challenge.labs.controller.AgendamentoController;
 import com.challenge.labs.dtos.AgendamentoDTO;
 import com.challenge.labs.model.Agendamento;
 import com.challenge.labs.model.Destinatario;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 @Slf4j
 @Service
@@ -25,15 +29,16 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     private final NotificadorService notificadorService;
     private final DestinatarioRepository destinatarioRepository;
 
+
     @Override
     public AgendamentoDTO agendar(AgendamentoDTO dtoAgendamento) {
         Agendamento agendamento = modelMapper.map(dtoAgendamento, Agendamento.class);
-        agendamento.setUuid(UUID.randomUUID());
+        agendamento.setUuid(UUID.randomUUID().toString());
         Destinatario destinatario = destinatarioRepository.findByCpf(dtoAgendamento.getDestinatario());
         agendamento.setDestinatario(destinatario);
         dtoAgendamento = modelMapper.map(agendamentoRepository.save(agendamento), AgendamentoDTO.class);
         this.criarNotificacao(agendamento);
-        return dtoAgendamento;
+        return this.criarHiperLink(dtoAgendamento);
     }
 
     @Override
@@ -46,6 +51,13 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     public void cancelarAgendamento(String uuid) {
         Notificacao notificacao = notificadorService.recuperarNotificacaoPorAgendamento(uuid);
         notificadorService.cancelarNotificacaoDeAgendamento(notificacao);
+    }
+
+
+    private AgendamentoDTO criarHiperLink(AgendamentoDTO dtoAgendamento) {
+        dtoAgendamento.add(linkTo(methodOn(AgendamentoController.class).consultaComunicao(dtoAgendamento.getUuid())).withRel("consultar"));
+        dtoAgendamento.add(linkTo(methodOn(AgendamentoController.class).cancelamentoComunicacao(dtoAgendamento.getUuid())).withRel("cancelar"));
+        return dtoAgendamento;
     }
 
     private void criarNotificacao(Agendamento agendamento) {

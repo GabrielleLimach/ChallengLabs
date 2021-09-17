@@ -5,14 +5,17 @@ spring:
     database: postgresql
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: gmcore123
     driver-class-name: org.postgresql.Driver
   flyway:
-    enabled: false
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    schemas: agendamento
 logging:
   level:
     com.challenge.labs: debug

@@ -1,3 +1,4 @@
+create schema agendamento;
 create table if not exists agendamento.ag02_destinatario
 (
     ag02_id   bigserial   not null

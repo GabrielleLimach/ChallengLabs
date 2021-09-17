@@ -5,11 +5,10 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Entity
-@Table(schema = "agendamento", name = "ag04_contato")
+@Table(schema = "agendamento", name = "ag01_agendamento")
 public class Agendamento {
 
     @Id
@@ -32,6 +31,6 @@ public class Agendamento {
     private Integer tipo = 1;
 
     @Column(name = "ag01_uuid")
-    private UUID uuid = getUuid();
+    private String uuid;
 
 }
