@@ -9,26 +9,25 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
-public class EmailObserverTest {
+public class WhatsapObserverTest {
     @Mock
     Logger log;
     @InjectMocks
-    EmailObserver emailObserver;
+    WhatsapObserver whatsapObserver;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-
     }
 
     @Test
-    public void testEnviarNotificacao() {
-        String expectedInfoMessage = "Enviando mensagem por email";
-        LogCaptor logCaptor = LogCaptor.forClass(EmailObserver.class);
+    public void testEnviarNotificacao(){
+        String expectedInfoMessage = "Enviando mensagem por Whatsap ";
+        LogCaptor logCaptor = LogCaptor.forClass(WhatsapObserver.class);
         logCaptor.setLogLevelToInfo();
-        emailObserver.enviarNotificacao();
+        whatsapObserver.enviarNotificacao();
         assertTrue(logCaptor.getInfoLogs().contains(expectedInfoMessage));
     }
-
 }

@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-    password: gmcore123
+    password: root
     driver-class-name: org.postgresql.Driver
   flyway:
     enabled: true

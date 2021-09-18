@@ -7,8 +7,16 @@ services:
     ports:
     - 5432:5432
     container_name: db
+  challenge-labs:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: challenge-labs
+    image: challenge-labs-image
+    depends_on:
+      - db
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: gmcore123
+      POSTGRES_PASSWORD: root
       POSTGRES_DB: postgres
       POSTGRES_SCHEMA: agendamento

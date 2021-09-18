@@ -1,7 +1,7 @@
 # Welcome!
 
-# This is ChallengLabs
-Challenge technician plataforma de comunicação
+# This is Challeng Labs
+Desafio de uma plataforma de agendamento de comunicação.
 
 ## 🚀 Começando
 
@@ -11,14 +11,22 @@ Para instalar o projeto, basta clonar o repositório:
 git@github.com:GabrielleLimach/ChallengLabs.git
 ```
 
-# Testes
-Testes unitários
+## 🛠️ Executando o projeto
+
+## Execução com docker
+#### Após clonar o projeto, executar o seguinte comando para criar as imagens e os containers do docker
+```
+docker compose up
+```
+
+## Testes
+### Testes Unitários
 ```
 Utilizado recursos do JUnit e Mockito para verificação dos endpoints e das respostas esperadas.
 ```
 
-# Documentação
-A documentação de api foi criada com o Swagger que pode ser acessada após a execução do projeto no link:
+## 📄 Documentação
+#### A documentação de api foi criada com o Swagger que pode ser acessada após a execução do projeto no link:
 ```
 http://localhost:9999/swagger-ui.html
 ```
@@ -32,6 +40,7 @@ http://localhost:9999/swagger-ui.html
 * Swagger - Geração de documentação dos endpoints com ui
 * Maven - Gerenciador de dependências
 * Jpa - Facilita o ORM ao possibilitar a escrita de querys, controlando as requisições ao banco de dados
-* 
-## ✒️ Autores
+
+
+## ✒️ Autor
 * **Gabrielle Limach** - *Desenvolvimento do projeto* - [Gabrielle Limach](https://github.com/GabrielleLimach)

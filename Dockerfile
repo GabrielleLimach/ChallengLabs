@@ -2,6 +2,6 @@ FROM openjdk:8
 
 WORKDIR /app
 
-COPY target/spring-boot-challeng-labs0.0.1-SNAPSHOT.jar /app/spring-challeng-labs
+COPY target/spring-boot-challeng-labs*.jar spring-boot-challeng-labs.jar
 
 ENTRYPOINT ["java", "spring-boot-challeng-labs", "spring-boot-challeng-labs"]

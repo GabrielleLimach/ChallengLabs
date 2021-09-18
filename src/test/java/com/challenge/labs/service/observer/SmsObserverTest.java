@@ -10,25 +10,24 @@ import org.slf4j.Logger;
 
 import static org.junit.Assert.assertTrue;
 
-public class EmailObserverTest {
+public class SmsObserverTest {
     @Mock
     Logger log;
     @InjectMocks
-    EmailObserver emailObserver;
+    SmsObserver smsObserver;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-
     }
 
     @Test
-    public void testEnviarNotificacao() {
-        String expectedInfoMessage = "Enviando mensagem por email";
-        LogCaptor logCaptor = LogCaptor.forClass(EmailObserver.class);
+    public void testEnviarNotificacao(){
+        String expectedInfoMessage = "Enviando mensagem SMS ";
+        LogCaptor logCaptor = LogCaptor.forClass(SmsObserver.class);
         logCaptor.setLogLevelToInfo();
-        emailObserver.enviarNotificacao();
+        smsObserver.enviarNotificacao();
         assertTrue(logCaptor.getInfoLogs().contains(expectedInfoMessage));
-    }
 
+    }
 }
