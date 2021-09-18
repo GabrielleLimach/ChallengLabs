@@ -31,8 +31,7 @@ public class AgendamentoController {
     @PostMapping("/v1/agendar")
     public ResponseEntity<AgendamentoDTO> agendamentoComunicao(@RequestBody @Valid AgendamentoDTO dtoAgendamento) {
         URI location = ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri();
-        dtoAgendamento = agendamentoService.agendar(dtoAgendamento);
-        return ResponseEntity.created(location).body(dtoAgendamento);
+        return ResponseEntity.created(location).body(agendamentoService.agendar(dtoAgendamento));
     }
 
     @ApiOperation(value = "Rota Consulta do envio da comunicação",

@@ -43,7 +43,9 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
     @Override
     public AgendamentoDTO consultarAgendamento(String uuid) {
-        return modelMapper.map(agendamentoRepository.findAllByUuid(uuid), AgendamentoDTO.class);
+        Agendamento agendamento = agendamentoRepository.findAllByUuid(uuid);
+        AgendamentoDTO dto =  modelMapper.map(agendamento, AgendamentoDTO.class);
+        return  dto;
     }
 
 

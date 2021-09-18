@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class NotificadorServiceTest {
@@ -68,8 +70,8 @@ public class NotificadorServiceTest {
     public void testEnviarNotificacoes(){
         when(notificacaoRepository.findTop100ByStatus(StatusEnvio.AGUARDANDO)).thenReturn(notificacaoList);
         notificadorService.enviarNotificacoes();
-        Mockito.verify(notificacaoRepository, Mockito.times(1)).saveAll(notificacaoList);
-        Assert.assertEquals(StatusEnvio.CONCLUIDO, notificacao.getStatus());
+        verify(notificacaoRepository, Mockito.times(1)).saveAll(notificacaoList);
+        assertEquals(StatusEnvio.CONCLUIDO, notificacao.getStatus());
     }
 
     @Test
@@ -81,7 +83,7 @@ public class NotificadorServiceTest {
     public void testSalvarNotificacao(){
         when(notificacaoRepository.findNotificacaoByUuid(agendamentoDto.getUuid())).thenReturn(notificacao);
         notificadorService.salvarNotificacao(notificacao);
-        Mockito.verify(notificacaoRepository, Mockito.times(1)).save(notificacao);
+        verify(notificacaoRepository, Mockito.times(1)).save(notificacao);
     }
 
     @Test
@@ -89,15 +91,15 @@ public class NotificadorServiceTest {
         when(notificacaoRepository.findNotificacaoByUuid(agendamentoDto.getUuid())).thenReturn(notificacao);
 
         Notificacao result = notificadorService.recuperarNotificacaoPorAgendamento(agendamentoDto.getUuid());
-        Assert.assertEquals(notificacao, result);
+        assertEquals(notificacao, result);
     }
 
     @Test
     public void testCancelarNotificacaoDeAgendamento(){
         notificadorService.cancelarNotificacaoDeAgendamento(notificacao);
 
-        Assert.assertEquals(StatusEnvio.CANCELADA, notificacao.getStatus());
-        Mockito.verify(notificacaoRepository, Mockito.times(1)).save(notificacao);
+        assertEquals(StatusEnvio.CANCELADA, notificacao.getStatus());
+        verify(notificacaoRepository, Mockito.times(1)).save(notificacao);
     }
 
     @Test
@@ -105,6 +107,6 @@ public class NotificadorServiceTest {
         when(notificacaoRepository.findTop100ByStatus(StatusEnvio.AGUARDANDO)).thenReturn(notificacaoList);
 
         List<Notificacao> result = notificadorService.recuperarListaNotificacoesPorStatus(StatusEnvio.AGUARDANDO);
-        Assert.assertEquals(notificacaoList, result);
+        assertEquals(notificacaoList, result);
     }
 }
