@@ -1,5 +1,6 @@
 package com.challenge.labs.service;
 
+import com.challenge.labs.config.modelmapper.ModelMapperConfig;
 import com.challenge.labs.dtos.AgendamentoDTO;
 import com.challenge.labs.model.Agendamento;
 import com.challenge.labs.model.Destinatario;
@@ -10,13 +11,10 @@ import com.challenge.labs.repository.DestinatarioRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ import static org.mockito.Mockito.*;
 public class AgendamentoServiceImplTest {
     @Mock
     AgendamentoRepository agendamentoRepository;
-    @Mock
+    @Spy
     ModelMapper modelMapper;
     @Mock
     NotificadorService notificadorService;
@@ -48,8 +46,7 @@ public class AgendamentoServiceImplTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         destinatario = new Destinatario();
-        modelMapper = mock(ModelMapper.class);
-
+//        modelMapper = mock(ModelMapper.class);
         destinatario.setCpf("21345678954");
         destinatario.setNome("Usuario");
         agendamento = new Agendamento();
@@ -74,19 +71,18 @@ public class AgendamentoServiceImplTest {
 
     @Test
     public void testAgendar(){
-        when(destinatarioRepository.findByCpf(anyString())).thenReturn(new Destinatario());
-
-        AgendamentoDTO result = agendamentoServiceImpl.agendar(new AgendamentoDTO());
-        Assert.assertEquals(new AgendamentoDTO(), result);
+        when(destinatarioRepository.findByCpf(any())).thenReturn(destinatario);
+        when(agendamentoRepository.save(any())).thenReturn(agendamento);
+        when(modelMapper.map(agendamento, AgendamentoDTO.class)).thenReturn(agendamentoDto);
+        AgendamentoDTO result = agendamentoServiceImpl.agendar(agendamentoDto);
+        Assert.assertEquals(agendamentoDto, result);
     }
 
     @Test
     public void testConsultarAgendamento(){
-        when(agendamentoRepository.findAllByUuid(agendamento.getUuid())).thenReturn(agendamento);
-        when(modelMapper.map(agendamento, AgendamentoDTO.class)).thenReturn(agendamentoDto);
-
-        AgendamentoDTO result = agendamentoServiceImpl.consultarAgendamento(agendamento.getUuid());
-        Assert.assertEquals(agendamentoDto, result);
+        when(agendamentoRepository.findByUuid(any())).thenReturn(agendamento);
+        spy(modelMapper.map(agendamento, AgendamentoDTO.class));
+        Assert.assertNotNull(agendamentoServiceImpl.consultarAgendamento(agendamento.getUuid()));
     }
 
     @Test
@@ -94,5 +90,6 @@ public class AgendamentoServiceImplTest {
         when(notificadorService.recuperarNotificacaoPorAgendamento(agendamento.getUuid())).thenReturn(notificacao);
 
         agendamentoServiceImpl.cancelarAgendamento(agendamento.getUuid());
+        verify(notificadorService, Mockito.times(1)).cancelarNotificacaoDeAgendamento(notificacao);
     }
 }

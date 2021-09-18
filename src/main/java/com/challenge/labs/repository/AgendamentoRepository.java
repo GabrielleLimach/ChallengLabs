@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
 
-    Agendamento findAllByUuid(String uuid);
+    Agendamento findByUuid(String uuid);
 
 }

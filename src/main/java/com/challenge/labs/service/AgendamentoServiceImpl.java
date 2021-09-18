@@ -36,14 +36,15 @@ public class AgendamentoServiceImpl implements AgendamentoService {
         agendamento.setUuid(UUID.randomUUID().toString());
         Destinatario destinatario = destinatarioRepository.findByCpf(dtoAgendamento.getDestinatario());
         agendamento.setDestinatario(destinatario);
-        dtoAgendamento = modelMapper.map(agendamentoRepository.save(agendamento), AgendamentoDTO.class);
+        agendamento =  agendamentoRepository.save(agendamento);
+        dtoAgendamento = modelMapper.map(agendamento, AgendamentoDTO.class);
         this.criarNotificacao(agendamento);
         return this.criarHiperLink(dtoAgendamento);
     }
 
     @Override
     public AgendamentoDTO consultarAgendamento(String uuid) {
-        Agendamento agendamento = agendamentoRepository.findAllByUuid(uuid);
+        Agendamento agendamento = agendamentoRepository.findByUuid(uuid);
         AgendamentoDTO dto =  modelMapper.map(agendamento, AgendamentoDTO.class);
         return  dto;
     }

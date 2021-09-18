@@ -10,10 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 
 @RestController
 @RequestMapping("/agendamentos")
@@ -30,8 +28,7 @@ public class AgendamentoController {
     })
     @PostMapping("/v1/agendar")
     public ResponseEntity<AgendamentoDTO> agendamentoComunicao(@RequestBody @Valid AgendamentoDTO dtoAgendamento) {
-        URI location = ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri();
-        return ResponseEntity.created(location).body(agendamentoService.agendar(dtoAgendamento));
+        return new ResponseEntity<>(agendamentoService.agendar(dtoAgendamento), HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Rota Consulta do envio da comunicação",

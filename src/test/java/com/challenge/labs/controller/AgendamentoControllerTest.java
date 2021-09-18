@@ -12,15 +12,17 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AgendamentoControllerTest {
     @Mock
@@ -61,23 +63,24 @@ public class AgendamentoControllerTest {
     }
 
     @Test
-    public void testAgendamentoComunicao(){
+    public void testAgendamentoComunicao() {
         when(agendamentoService.agendar(agendamentoDto)).thenReturn(agendamentoDto);
 
         ResponseEntity<AgendamentoDTO> result = agendamentoController.agendamentoComunicao(agendamentoDto);
-        Assert.assertEquals(agendamentoDto, result);
+        Assert.assertEquals(result, ResponseEntity.created(null).body(agendamentoDto));
     }
 
     @Test
-    public void testConsultaComunicao(){
+    public void testConsultaComunicao() {
         when(agendamentoService.consultarAgendamento(agendamento.getUuid())).thenReturn(agendamentoDto);
         ResponseEntity<AgendamentoDTO> result = agendamentoController.consultaComunicao(agendamento.getUuid());
         Assert.assertEquals(ResponseEntity.ok(agendamentoDto), result);
     }
 
     @Test
-    public void testCancelamentoComunicacao(){
+    public void testCancelamentoComunicacao() {
         ResponseEntity<Void> result = agendamentoController.cancelamentoComunicacao(agendamento.getUuid());
-        Assert.assertEquals(null, result);
+        verify(agendamentoService).cancelarAgendamento(agendamento.getUuid());
+        Assert.assertEquals(result.getStatusCode(), HttpStatus.ACCEPTED);
     }
 }
