@@ -10,7 +10,7 @@ ModelMapper - Facilitar a conversão de objetos, para retorno da API.
 
 
 # Testes
-Testes unitários com recursos do JUnit e Mockito para verificação dos endpoints e das respostas esperadas.
+<code>Testes unitários com recursos do JUnit e Mockito para verificação dos endpoints e das respostas esperadas.</code>
 
-<code><img height= "20"src= "https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white"></code>
+
 # Documentação
