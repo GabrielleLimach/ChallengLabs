@@ -4,13 +4,16 @@
 Challenge technician plataforma de comunicação
 
 # Tecnologias Utilizadas
-Postgres -
+Postgres - Bando de dados
 Flyway - utilizado para automatizar execução de scripts e gerar as tabelas do banco de dados.
 ModelMapper - Facilitar a conversão de objetos, para retorno da API.
+Docker - Criar conteiner com ambiente controlado para execução da aplicação
+swagger - Geração de documentação dos endpoints com ui
 
 
 # Testes
-<code>Testes unitários com recursos do JUnit e Mockito para verificação dos endpoints e das respostas esperadas.</code>
-
+```
+Testes unitários com recursos do JUnit e Mockito para verificação dos endpoints e das respostas esperadas.
+```
 
 # Documentação
