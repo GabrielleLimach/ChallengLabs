@@ -2,6 +2,6 @@ FROM openjdk:8
 
 WORKDIR /app
 
-COPY target/spring-boot-challeng-labs*.jar spring-boot-challeng-labs.jar
+COPY target/spring-boot-challeng-labs.jar /app/spring-boot-challeng-labs.jar
 
-ENTRYPOINT ["java", "spring-boot-challeng-labs", "spring-boot-challeng-labs"]
+ENTRYPOINT ["java", "-jar" , "/app/spring-boot-challeng-labs.jar"]
