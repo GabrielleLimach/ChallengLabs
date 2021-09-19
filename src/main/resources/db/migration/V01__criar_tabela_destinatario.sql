@@ -9,4 +9,3 @@ create table if not exists agendamento.ag02_destinatario
 
 alter table agendamento.ag02_destinatario
     owner to postgres;
-

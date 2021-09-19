@@ -1,6 +1,7 @@
 package com.challenge.labs.model;
 
 import com.challenge.labs.model.enums.StatusEnvio;
+import com.challenge.labs.model.enums.TipoContato;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,6 +30,10 @@ public class Notificacao {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ag03_id_agendamento")
     private Agendamento agendamento;
+
+    @Column(name = "ag03_tipo_contato")
+    @Enumerated(EnumType.ORDINAL)
+    private TipoContato tipo;
 
     @Column(name = "ag03_data_agendamento")
     private LocalDateTime dataAgendamento;

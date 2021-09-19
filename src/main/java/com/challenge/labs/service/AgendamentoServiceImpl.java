@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import javax.validation.ValidationException;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -32,11 +34,14 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
     @Override
     public AgendamentoDTO agendar(AgendamentoDTO dtoAgendamento) {
-        Agendamento agendamento = modelMapper.map(dtoAgendamento, Agendamento.class);
-        agendamento.setUuid(UUID.randomUUID().toString());
-        Destinatario destinatario = destinatarioRepository.findByCpf(dtoAgendamento.getDestinatario());
+        AgendamentoDTO finalDtoAgendamento = dtoAgendamento;
+        Destinatario destinatario = Optional.ofNullable(destinatarioRepository.findByCpf(dtoAgendamento.getDestinatario()))
+                .orElseThrow(() ->
+                        new ValidationException("Não foi possivel localizar o destinatário: " + finalDtoAgendamento.getDestinatario()));
+
+        Agendamento agendamento = montarAgendamento(dtoAgendamento);
         agendamento.setDestinatario(destinatario);
-        agendamento =  agendamentoRepository.save(agendamento);
+        agendamento = agendamentoRepository.save(agendamento);
         dtoAgendamento = modelMapper.map(agendamento, AgendamentoDTO.class);
         this.criarNotificacao(agendamento);
         return this.criarHiperLink(dtoAgendamento);
@@ -45,8 +50,8 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     @Override
     public AgendamentoDTO consultarAgendamento(String uuid) {
         Agendamento agendamento = agendamentoRepository.findByUuid(uuid);
-        AgendamentoDTO dto =  modelMapper.map(agendamento, AgendamentoDTO.class);
-        return  dto;
+        AgendamentoDTO dto = modelMapper.map(agendamento, AgendamentoDTO.class);
+        return dto;
     }
 
 
@@ -54,6 +59,14 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     public void cancelarAgendamento(String uuid) {
         Notificacao notificacao = notificadorService.recuperarNotificacaoPorAgendamento(uuid);
         notificadorService.cancelarNotificacaoDeAgendamento(notificacao);
+    }
+
+    @Override
+    public Agendamento montarAgendamento(AgendamentoDTO dtoAgendamento) {
+        Agendamento agendamento = modelMapper.map(dtoAgendamento, Agendamento.class);
+        agendamento.setUuid(UUID.randomUUID().toString());
+//        agendamento.setDestinatario(destinatario);
+        return agendamento;
     }
 
 

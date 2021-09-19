@@ -13,10 +13,9 @@ git@github.com:GabrielleLimach/ChallengLabs.git
 
 ## 🛠️ Executando o projeto
 
-## Execução com docker
 #### Após clonar o projeto, executar o seguinte comando para criar as imagens e os containers do docker
 ```
-docker compose up
+docker-compose up
 ```
 
 ## Testes

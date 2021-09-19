@@ -1,4 +1,4 @@
-create table if not exists agendamento.ag03_notificacao
+create table agendamento.ag03_notificacao
 (
     ag03_id               bigserial   not null
         constraint ag03_notificacao_pk
@@ -10,12 +10,13 @@ create table if not exists agendamento.ag03_notificacao
     ag03_data_agendamento timestamp   not null,
     ag03_uuid             varchar(36) not null
         constraint ag03_fk_uuid
-            references agendamento.ag01_agendamento (ag01_uuid)
+            references agendamento.ag01_agendamento (ag01_uuid),
+    ag03_tipo_contato     integer     not null
 );
 
 alter table agendamento.ag03_notificacao
     owner to postgres;
 
-create unique index if not exists ag03_notificacao_ag03_id_uindex
+create unique index ag03_notificacao_ag03_id_uindex
     on agendamento.ag03_notificacao (ag03_id);
 

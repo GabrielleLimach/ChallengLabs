@@ -27,9 +27,6 @@ public class Agendamento {
     @Column(name = "ag01_mensagem")
     private String mensagem;
 
-    @Column(name = "ag01_tipo")
-    private Integer tipo = 1;
-
     @Column(name = "ag01_uuid")
     private String uuid;
 

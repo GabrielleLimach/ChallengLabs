@@ -6,7 +6,10 @@ import com.challenge.labs.repository.NotificacaoRepository;
 import com.challenge.labs.service.observer.NotificacaoObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,8 +26,8 @@ public class NotificadorService {
     private final List<NotificacaoObserver> observers;
     private final NotificacaoRepository notificacaoRepository;
 
-    //    @Transactional(isolation = Isolation.SERIALIZABLE)
-//    @Scheduled(fixedDelay = DOIS_MINUTOS/*, initialDelay = DOIS_MINUTOS*/)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Scheduled(fixedDelay = DOIS_MINUTOS, initialDelay = DOIS_MINUTOS)
     public void enviarNotificacoes() {
         List<Notificacao> notificacaoList = this.recuperarListaNotificacoesPorStatus(StatusEnvio.AGUARDANDO);
         notificacaoList.stream()
@@ -53,7 +56,7 @@ public class NotificadorService {
         notificacaoRepository.save(notificacao);
     }
 
-    List<Notificacao> recuperarListaNotificacoesPorStatus(StatusEnvio statusEnvio){
+    List<Notificacao> recuperarListaNotificacoesPorStatus(StatusEnvio statusEnvio) {
         return notificacaoRepository.findTop100ByStatus(statusEnvio);
     }
 
