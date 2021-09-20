@@ -5,8 +5,10 @@ import com.challenge.labs.model.Agendamento;
 import com.challenge.labs.model.Destinatario;
 import com.challenge.labs.model.Notificacao;
 import com.challenge.labs.model.enums.StatusEnvio;
+import com.challenge.labs.model.exception.ObjetoNaoEncontradoException;
 import com.challenge.labs.repository.NotificacaoRepository;
 import com.challenge.labs.service.observer.NotificacaoObserver;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -91,10 +93,19 @@ public class NotificadorServiceTest {
 
     @Test
     public void testRecuperarNotificacaoPorAgendamento(){
-        when(notificacaoRepository.findNotificacaoByUuid(agendamentoDto.getUuid())).thenReturn(notificacao);
+        when(notificacaoRepository.findAllByUuid(agendamentoDto.getUuid())).thenReturn(notificacaoList);
 
         List<Notificacao> result = notificadorService.recuperarNotificacaoPorAgendamento(agendamentoDto.getUuid());
-        assertEquals(notificacao, result);
+        assertEquals(notificacaoList, result);
+    }
+
+    @Test
+    public void deveLancarUmaExcessaoCasoNaoLocalizeANotificacao() {
+        when(notificacaoRepository.findNotificacaoByUuid(agendamentoDto.getUuid())).thenReturn(notificacao);
+        Assertions.assertThatCode(() -> notificadorService.recuperarNotificacaoPorAgendamento(agendamentoDto.getUuid()))
+                .isInstanceOf(ObjetoNaoEncontradoException.class)
+                .hasMessage("Não foi possivel localizar um agendamento para esse uuid " + agendamentoDto.getUuid());
+
     }
 
     @Test
