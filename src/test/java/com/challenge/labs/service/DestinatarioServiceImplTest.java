@@ -7,40 +7,33 @@ import com.challenge.labs.model.Destinatario;
 import com.challenge.labs.model.Notificacao;
 import com.challenge.labs.model.enums.StatusEnvio;
 import com.challenge.labs.model.enums.TipoContato;
-import com.challenge.labs.repository.AgendamentoRepository;
-import com.challenge.labs.repository.ContatosRepository;
+import com.challenge.labs.model.exception.DestinatarioInvalidoException;
+import com.challenge.labs.model.exception.ObjetoNaoEncontradoException;
 import com.challenge.labs.repository.DestinatarioRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.*;
-import org.modelmapper.ModelMapper;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-public class AgendamentoServiceImplTest {
-    @Mock
-    AgendamentoRepository agendamentoRepository;
-    @Spy
-    ModelMapper modelMapper;
-    @Mock
-    NotificadorService notificadorService;
+public class DestinatarioServiceImplTest {
     @Mock
     DestinatarioRepository destinatarioRepository;
     @Mock
-    DestinatarioService destinatarioService;
-    @Mock
-    ContatosRepository contatosRepository;
-    @Mock
     Logger log;
     @InjectMocks
-    AgendamentoServiceImpl agendamentoServiceImpl;
+    DestinatarioServiceImpl destinatarioServiceImpl;
     Agendamento agendamento;
     Destinatario destinatario;
     AgendamentoDTO agendamentoDto;
@@ -87,28 +80,19 @@ public class AgendamentoServiceImplTest {
     }
 
     @Test
-    public void testAgendar(){
-        when(destinatarioRepository.findByCpf(any())).thenReturn(destinatario);
-        when(agendamentoRepository.save(any())).thenReturn(agendamento);
-        when(destinatarioService.recuperarDestinatario(any())).thenReturn(destinatario);
-        when(contatosRepository.findAllByDestinatario(any())).thenReturn(contatoList);
-        when(modelMapper.map(agendamento, AgendamentoDTO.class)).thenReturn(agendamentoDto);
-        AgendamentoDTO result = agendamentoServiceImpl.agendar(agendamentoDto);
-        Assert.assertEquals(agendamentoDto, result);
+    public void testRecuperarDestinatario() {
+        when(destinatarioRepository.findByCpf(anyString())).thenReturn(destinatario);
+
+        Destinatario result = destinatarioServiceImpl.recuperarDestinatario(agendamentoDto);
+        Assert.assertEquals(destinatario, result);
     }
 
     @Test
-    public void testConsultarAgendamento(){
-        when(agendamentoRepository.findByUuid(any())).thenReturn(agendamento);
-        spy(modelMapper.map(agendamento, AgendamentoDTO.class));
-        Assert.assertNotNull(agendamentoServiceImpl.consultarAgendamento(agendamento.getUuid()));
-    }
+    public void deveLancarUmaExcessaoCasoNaoLocalizeOdestinatario() {
+        when(destinatarioRepository.findByCpf(anyString())).thenReturn(null);
+        Assertions.assertThatCode(() -> destinatarioServiceImpl.recuperarDestinatario(agendamentoDto))
+                .isInstanceOf(DestinatarioInvalidoException.class)
+                .hasMessage("Não foi possivel localizar o destinatário verifique se o cpf esta correto: " + agendamento.getDestinatario().getNome());
 
-    @Test
-    public void testCancelarAgendamento(){
-        when(notificadorService.recuperarNotificacaoPorAgendamento(agendamento.getUuid())).thenReturn(notificacaoList);
-
-        agendamentoServiceImpl.cancelarAgendamento(agendamento.getUuid());
-        verify(notificadorService, Mockito.times(1)).cancelarNotificacaoDeAgendamento(notificacao);
     }
 }
