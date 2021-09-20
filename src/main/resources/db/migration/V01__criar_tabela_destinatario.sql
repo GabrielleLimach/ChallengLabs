@@ -9,3 +9,7 @@ create table if not exists agendamento.ag02_destinatario
 
 alter table agendamento.ag02_destinatario
     owner to postgres;
+
+
+INSERT INTO agendamento.ag02_destinatario (ag02_id, ag02_nome, ag02_cpf)
+VALUES (DEFAULT, 'Gabrielle', '12345678945');

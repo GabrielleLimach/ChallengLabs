@@ -5,13 +5,11 @@ import com.challenge.labs.model.Agendamento;
 
 public interface AgendamentoService {
 
-    AgendamentoDTO agendar(AgendamentoDTO agendamento);
+    AgendamentoDTO agendar(AgendamentoDTO agendamentoDTO);
 
     AgendamentoDTO consultarAgendamento(String uuid);
 
     void cancelarAgendamento(String uuid);
 
     Agendamento montarAgendamento(AgendamentoDTO dtoAgendamento);
-
-
 }

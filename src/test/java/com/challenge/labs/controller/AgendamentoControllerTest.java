@@ -15,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,11 @@ public class AgendamentoControllerTest {
         agendamento.setDataAgendamento(LocalDateTime.of(2022, 02, 01, 01, 0));
         agendamento.setMensagem("Lembrete Labs");
         agendamento.setUuid(UUID.randomUUID().toString());
-        agendamentoDto = new AgendamentoDTO();
+        agendamentoDto = AgendamentoDTO.builder()
+                .destinatario(destinatario.getNome())
+                .mensagem(agendamento.getMensagem())
+                .dataAgendamento(agendamento.getDataAgendamento())
+                .build();
         agendamentoDto.setDataAgendamento(agendamento.getDataAgendamento());
         agendamentoDto.setMensagem(agendamento.getMensagem());
         agendamentoDto.setDestinatario(destinatario.getNome());
@@ -81,6 +84,6 @@ public class AgendamentoControllerTest {
     public void testCancelamentoComunicacao() {
         ResponseEntity<Void> result = agendamentoController.cancelamentoComunicacao(agendamento.getUuid());
         verify(agendamentoService).cancelarAgendamento(agendamento.getUuid());
-        Assert.assertEquals(result.getStatusCode(), HttpStatus.ACCEPTED);
+        Assert.assertEquals(result.getStatusCode(), HttpStatus.OK);
     }
 }

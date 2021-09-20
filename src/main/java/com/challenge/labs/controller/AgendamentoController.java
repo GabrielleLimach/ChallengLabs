@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/agendamentos")
+@Slf4j
+@RequestMapping("api/agendamentos")
 @RequiredArgsConstructor
 public class AgendamentoController {
 
@@ -28,6 +30,7 @@ public class AgendamentoController {
     })
     @PostMapping("/v1/agendar")
     public ResponseEntity<AgendamentoDTO> agendamentoComunicao(@RequestBody @Valid AgendamentoDTO dtoAgendamento) {
+        System.out.println( new ResponseEntity<>(agendamentoService.agendar(dtoAgendamento), HttpStatus.CREATED));
         return new ResponseEntity<>(agendamentoService.agendar(dtoAgendamento), HttpStatus.CREATED);
     }
 
@@ -50,6 +53,7 @@ public class AgendamentoController {
     @PostMapping("/v1/cancelar/{uuid}")
     public ResponseEntity<Void> cancelamentoComunicacao(@PathVariable("uuid") String uuid) {
         agendamentoService.cancelarAgendamento(uuid);
-        return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+        log.info("Agendamento cancelado com sucesso: " + uuid);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

@@ -1,6 +1,5 @@
 package com.challenge.labs.service;
 
-import com.challenge.labs.config.modelmapper.ModelMapperConfig;
 import com.challenge.labs.dtos.AgendamentoDTO;
 import com.challenge.labs.model.Agendamento;
 import com.challenge.labs.model.Destinatario;
@@ -14,7 +13,6 @@ import org.junit.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,7 +52,11 @@ public class AgendamentoServiceImplTest {
         agendamento.setDataAgendamento(LocalDateTime.of(2022, 02, 01, 01, 0));
         agendamento.setMensagem("Lembrete Labs");
         agendamento.setUuid(UUID.randomUUID().toString());
-        agendamentoDto = new AgendamentoDTO();
+        agendamentoDto = AgendamentoDTO.builder()
+                .destinatario(destinatario.getNome())
+                .mensagem(agendamento.getMensagem())
+                .dataAgendamento(agendamento.getDataAgendamento())
+                .build();
         agendamentoDto.setDataAgendamento(agendamento.getDataAgendamento());
         agendamentoDto.setMensagem(agendamento.getMensagem());
         agendamentoDto.setDestinatario(destinatario.getNome());
@@ -87,7 +89,7 @@ public class AgendamentoServiceImplTest {
 
     @Test
     public void testCancelarAgendamento(){
-        when(notificadorService.recuperarNotificacaoPorAgendamento(agendamento.getUuid())).thenReturn(notificacao);
+        when(notificadorService.recuperarNotificacaoPorAgendamento(agendamento.getUuid())).thenReturn(notificacaoList);
 
         agendamentoServiceImpl.cancelarAgendamento(agendamento.getUuid());
         verify(notificadorService, Mockito.times(1)).cancelarNotificacaoDeAgendamento(notificacao);

@@ -20,10 +20,10 @@ public class Contato {
 
     @Column(name = "ag04_tipo")
     @Enumerated(EnumType.ORDINAL)
-    private TipoContato contatos;
+    private TipoContato tipoContato;
 
     @Column(name = "ag04_status")
-    private Integer tipo;
+    private Integer status;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ag04_id_destinatario", referencedColumnName = "ag02_id")

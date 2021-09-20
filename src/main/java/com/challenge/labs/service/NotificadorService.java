@@ -2,6 +2,7 @@ package com.challenge.labs.service;
 
 import com.challenge.labs.model.Notificacao;
 import com.challenge.labs.model.enums.StatusEnvio;
+import com.challenge.labs.model.exception.ObjetoNaoEncontradoException;
 import com.challenge.labs.repository.NotificacaoRepository;
 import com.challenge.labs.service.observer.NotificacaoObserver;
 import lombok.RequiredArgsConstructor;
@@ -47,8 +48,12 @@ public class NotificadorService {
         notificacaoRepository.save(notificacao);
     }
 
-    Notificacao recuperarNotificacaoPorAgendamento(String uuid) {
-        return notificacaoRepository.findNotificacaoByUuid(uuid);
+    List<Notificacao> recuperarNotificacaoPorAgendamento(String uuid) {
+        List<Notificacao> notificacaoList = notificacaoRepository.findAllByUuid(uuid);
+        if (notificacaoList.isEmpty())
+            throw new ObjetoNaoEncontradoException("Não foi possivel localizar um agendamento para esse uuid " + uuid);
+
+        return notificacaoList;
     }
 
     void cancelarNotificacaoDeAgendamento(Notificacao notificacao) {

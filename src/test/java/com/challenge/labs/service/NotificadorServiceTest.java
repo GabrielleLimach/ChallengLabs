@@ -7,7 +7,6 @@ import com.challenge.labs.model.Notificacao;
 import com.challenge.labs.model.enums.StatusEnvio;
 import com.challenge.labs.repository.NotificacaoRepository;
 import com.challenge.labs.service.observer.NotificacaoObserver;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -51,7 +50,11 @@ public class NotificadorServiceTest {
         agendamento.setDataAgendamento(LocalDateTime.of(2022, 02, 01, 01, 0));
         agendamento.setMensagem("Lembrete Labs");
         agendamento.setUuid(UUID.randomUUID().toString());
-        agendamentoDto = new AgendamentoDTO();
+        agendamentoDto = AgendamentoDTO.builder()
+                .destinatario(destinatario.getNome())
+                .mensagem(agendamento.getMensagem())
+                .dataAgendamento(agendamento.getDataAgendamento())
+                .build();
         agendamentoDto.setDataAgendamento(agendamento.getDataAgendamento());
         agendamentoDto.setMensagem(agendamento.getMensagem());
         agendamentoDto.setDestinatario(destinatario.getNome());
@@ -90,7 +93,7 @@ public class NotificadorServiceTest {
     public void testRecuperarNotificacaoPorAgendamento(){
         when(notificacaoRepository.findNotificacaoByUuid(agendamentoDto.getUuid())).thenReturn(notificacao);
 
-        Notificacao result = notificadorService.recuperarNotificacaoPorAgendamento(agendamentoDto.getUuid());
+        List<Notificacao> result = notificadorService.recuperarNotificacaoPorAgendamento(agendamentoDto.getUuid());
         assertEquals(notificacao, result);
     }
 

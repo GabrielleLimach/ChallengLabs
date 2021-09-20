@@ -5,6 +5,7 @@ import com.challenge.labs.model.exception.DestinatarioInvalidoException;
 import com.challenge.labs.model.exception.ObjetoNaoEncontradoException;
 import com.challenge.labs.model.handle.StandardErrorHandler;
 import com.challenge.labs.model.handle.ValidationErrorHandler;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,12 +16,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.persistence.NonUniqueResultException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.UnexpectedTypeException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Set;
 
@@ -34,12 +37,9 @@ public class ExceptionHandlerController {
 
         ValidationErrorHandler err = this.geraValidationErrorHandler(HttpStatus.BAD_REQUEST, e, request);
         err.setMessage("Falha ao validar os campos do json");
-
         List<FieldError> fieldErrorList = e.getBindingResult().getFieldErrors();
         fieldErrorList.forEach(f -> err.addFieldMessageErrorHandler(f.getField(), f.getDefaultMessage()));
-
         log.error(e.getMessage(), e);
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
@@ -48,14 +48,29 @@ public class ExceptionHandlerController {
 
         ValidationErrorHandler err = this.geraValidationErrorHandler(HttpStatus.BAD_REQUEST, e, request);
         err.setMessage("Falha ao validar os campos do json");
-
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
         violations.forEach(f -> err.addFieldMessageErrorHandler(f.getPropertyPath().toString(), f.getMessageTemplate()));
-
         log.error(e.getMessage(), e);
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<StandardErrorHandler> handlerDateTimeParseViolada(ConstraintViolationException e, HttpServletRequest request) {
+        ValidationErrorHandler err = this.geraValidationErrorHandler(HttpStatus.BAD_REQUEST, e, request);
+        err.setMessage("Falha ao validar campo de data");
+        log.error(e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<StandardErrorHandler> handlerInvalidFormatException(ConstraintViolationException e, HttpServletRequest request) {
+        ValidationErrorHandler err = this.geraValidationErrorHandler(HttpStatus.BAD_REQUEST, e, request);
+        err.setMessage("Falha ao validar campo de data");
+        log.error(e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
 
     @ExceptionHandler(UnexpectedTypeException.class)
     public ResponseEntity<StandardErrorHandler> hanlderValidacaoTipoInvalido(UnexpectedTypeException e, HttpServletRequest request) {
@@ -93,15 +108,23 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(DestinatarioInvalidoException.class)
-    public ResponseEntity<StandardErrorHandler> handlerTituloPagarInvalido(DestinatarioInvalidoException e, HttpServletRequest request) {
+    public ResponseEntity<StandardErrorHandler> handlerDestinatarioInvalido(DestinatarioInvalidoException e, HttpServletRequest request) {
         StandardErrorHandler err = this.geraStandarErrorHandler(HttpStatus.BAD_REQUEST, e, request);
         log.error(e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
     @ExceptionHandler(AgendamentoInvalidoException.class)
-    public ResponseEntity<StandardErrorHandler> handlerCartaCreditoInvalida(AgendamentoInvalidoException e, HttpServletRequest request) {
+    public ResponseEntity<StandardErrorHandler> handlerAgendamentoInvalido(AgendamentoInvalidoException e, HttpServletRequest request) {
         StandardErrorHandler err = this.geraStandarErrorHandler(HttpStatus.BAD_REQUEST, e, request);
+        log.error(e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    @ExceptionHandler(NonUniqueResultException.class)
+    public ResponseEntity<StandardErrorHandler> handlerResultAgendamentoInvalido(AgendamentoInvalidoException e, HttpServletRequest request) {
+        ValidationErrorHandler err = this.geraValidationErrorHandler(HttpStatus.BAD_REQUEST, e, request);
+        err.setMessage("Falha ao recuperar agendamento");
         log.error(e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }

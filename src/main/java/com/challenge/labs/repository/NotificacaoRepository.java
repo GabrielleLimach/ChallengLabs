@@ -14,4 +14,6 @@ public interface NotificacaoRepository extends JpaRepository<Notificacao, Long> 
 
     Notificacao findNotificacaoByUuid(String uuid);
 
+    List<Notificacao> findAllByUuid(String uuid);
+
 }
