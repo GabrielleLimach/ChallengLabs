@@ -1,5 +1,6 @@
 package com.challenge.labs.model;
 
+import com.challenge.labs.model.enums.StatusContato;
 import com.challenge.labs.model.enums.TipoContato;
 import lombok.Data;
 
@@ -23,7 +24,8 @@ public class Contato {
     private TipoContato tipoContato;
 
     @Column(name = "ag04_status")
-    private Integer status;
+    @Enumerated(EnumType.ORDINAL)
+    private StatusContato status;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ag04_id_destinatario", referencedColumnName = "ag02_id")
