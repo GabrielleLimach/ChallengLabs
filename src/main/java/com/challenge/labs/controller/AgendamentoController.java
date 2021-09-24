@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @Slf4j
-@RequestMapping("api/agendamentos")
+@RequestMapping("api/agendamentos/v1")
 @RequiredArgsConstructor
 public class AgendamentoController {
 
@@ -28,9 +28,8 @@ public class AgendamentoController {
             @ApiResponse(code = 201, message = "Retorna um agendamento criado"),
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
-    @PostMapping("/v1/agendar")
+    @PostMapping("/agendar")
     public ResponseEntity<AgendamentoDTO> agendamentoComunicao(@RequestBody @Valid AgendamentoDTO dtoAgendamento) {
-        System.out.println( new ResponseEntity<>(agendamentoService.agendar(dtoAgendamento), HttpStatus.CREATED));
         return new ResponseEntity<>(agendamentoService.agendar(dtoAgendamento), HttpStatus.CREATED);
     }
 
@@ -40,7 +39,7 @@ public class AgendamentoController {
             @ApiResponse(code = 200, message = "Retorna um agendamento criado"),
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
-    @GetMapping("/v1/consultar/{uuid}")
+    @GetMapping("consultar/{uuid}")
     public ResponseEntity<AgendamentoDTO> consultaComunicao(@PathVariable("uuid") String uuid) {
         return ResponseEntity.ok(agendamentoService.consultarAgendamento(uuid));
     }
@@ -50,7 +49,8 @@ public class AgendamentoController {
             @ApiResponse(code = 200, message = "Retorna um agendamento criado"),
             @ApiResponse(code = 500, message = "Foi gerada uma exceção"),
     })
-    @PostMapping("/v1/cancelar/{uuid}")
+
+    @PostMapping("cancelar/{uuid}")
     public ResponseEntity<Void> cancelamentoComunicacao(@PathVariable("uuid") String uuid) {
         agendamentoService.cancelarAgendamento(uuid);
         log.info("Agendamento cancelado com sucesso: " + uuid);
