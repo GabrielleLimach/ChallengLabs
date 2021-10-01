@@ -5,6 +5,7 @@ import com.challenge.labs.model.Agendamento;
 import com.challenge.labs.model.Contato;
 import com.challenge.labs.model.Destinatario;
 import com.challenge.labs.model.Notificacao;
+import com.challenge.labs.model.enums.StatusContato;
 import com.challenge.labs.model.enums.StatusEnvio;
 import com.challenge.labs.model.enums.TipoContato;
 import com.challenge.labs.repository.AgendamentoRepository;
@@ -80,7 +81,7 @@ public class AgendamentoServiceImplTest {
         contato = new Contato();
         contato.setDestinatario(destinatario);
         contato.setTipoContato(TipoContato.EMAIL);
-        contato.setStatus(0);
+        contato.setStatus(StatusContato.ATIVO);
         contato.setEndereco("gabrielle@gmail.com");
         contatoList = new ArrayList<>();
         contatoList.add(contato);
