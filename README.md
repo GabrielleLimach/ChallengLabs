@@ -54,6 +54,6 @@ https://galactic-shuttle-519548.postman.co/workspace/Integracao~81a3f365-3462-4f
 
 ## ✒️ Autor
 * **Gabrielle Limach** - *Desenvolvimento do projeto* - [Gabrielle Limach](https://github.com/GabrielleLimach)
-* 
+
 ## Licença
 O código-fonte do site está licenciado sob a licença MIT, que você pode encontrar no arquivo LICENSE .
